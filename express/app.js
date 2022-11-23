@@ -1,7 +1,7 @@
 const path = require("path")
 
 const bodyParser = require("body-parser")
-const expressHbs = require("express-handlebars")
+const hbs = require("express-handlebars")
 
 const adminData = require("./routes/admin")
 const shopRoutes = require("./routes/shop")
@@ -10,7 +10,10 @@ const express = require("express")
 
 const app = express()
 
-app.engine("hbs", expressHbs())
+app.engine(
+  "hbs",
+  hbs({ layoutDir: "views/layouts", defaultLayout: "main-laout", extname :"hbs" })
+)
 app.set("view engine", "hbs")
 app.set("views", "views")
 
