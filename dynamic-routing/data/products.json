@@ -1,0 +1,16 @@
+[
+  {
+    "id": "1234567",
+    "title": "A Book",
+    "imageUrl": "https://www.publicdomainpictures.net/pictures/10000/velka/1-1210009435EGmE.jpg",
+    "description": "This is an awesome book!",
+    "price": "19"
+  },
+  {
+    "title": "Shirt",
+    "imageUrl": "https://gifts.helloprint.com/image/cache/catalog/product/t-shirt/hello-print-design-the-future-of-e-commerce-grijs-1200x1200.jpg",
+    "description": "Amazing Shirt!!",
+    "price": "90",
+    "id": "0.9894686817889726"
+  }
+]
