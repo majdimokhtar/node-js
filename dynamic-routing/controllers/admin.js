@@ -42,12 +42,12 @@ exports.postEditProduct = (req, res, next) => {
   const updatedTitle = req.body.title
   const updatedPrice = req.body.price
   const updatedImageUrl = req.body.imageUrl
-  const updatedDescription = req.body.description
+  const updatedDesc = req.body.description
   const updatedProduct = new Product(
     prodId,
     updatedTitle,
-    updatedDescription,
     updatedImageUrl,
+    updatedDesc,
     updatedPrice
   )
   updatedProduct.save()
@@ -62,4 +62,10 @@ exports.getProducts = (req, res, next) => {
       path: "/admin/products",
     })
   })
+}
+
+exports.postDeleteProduct = (req, res, next) => {
+  const productId = req.body.productId
+  Product.deleteById(productId)
+  res.redirect("/admin/products")
 }
