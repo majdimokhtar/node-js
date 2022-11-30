@@ -194,6 +194,16 @@ form {
   border-radius: 3px;
   cursor: pointer;
 }
+.danger {
+  border: 1px solid #e63946;
+  color: #e63946;
+  background: white;
+}
+.btn.danger:hover,
+btn.danger:active {
+  background-color: #e63946;
+  color: white;
+}
 
 .btn:hover,
 .btn:active {
