@@ -1,6 +1,5 @@
 const path = require("path")
-require('dotenv').config();
-
+require("dotenv").config()
 
 const express = require("express")
 const bodyParser = require("body-parser")
@@ -23,7 +22,7 @@ app.use(express.static(path.join(__dirname, "public")))
 app.use((req, res, next) => {
   User.findById("638a3a345fbc04778edce6d5")
     .then((user) => {
-      req.user = user
+      req.user = new User(user.name, user, email, user.cart, user._id)
       next()
     })
     .catch((err) => console.log(err))
@@ -33,8 +32,9 @@ app.use(shopRoutes)
 
 app.use(errorController.get404)
 
-
-
-  mongoConnect(()=>{
-    app.listen(process.env.PORT, console.log(`server is running in ${process.env.PORT}`))
-  })
+mongoConnect(() => {
+  app.listen(
+    process.env.PORT,
+    console.log(`server is running in ${process.env.PORT}`)
+  )
+})
