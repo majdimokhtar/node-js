@@ -22,19 +22,17 @@ app.use(express.static(path.join(__dirname, "public")))
 app.use((req, res, next) => {
   User.findById("638a3a345fbc04778edce6d5")
     .then((user) => {
-      req.user = new User(user.name, user, user.email, user.cart, user._id)
+      req.user = new User(user.name, user.email, user.cart, user._id)
       next()
     })
     .catch((err) => console.log(err))
 })
+
 app.use("/admin", adminRoutes)
 app.use(shopRoutes)
 
 app.use(errorController.get404)
 
 mongoConnect(() => {
-  app.listen(
-    process.env.PORT,
-    console.log(`server is running in ${process.env.PORT}`)
-  )
+  app.listen(3000, console.log("server is running on 3000"))
 })
