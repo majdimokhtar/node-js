@@ -8,7 +8,7 @@ const transporter = nodemailer.createTransport(
   sendgridTransport({
     auth: {
       api_key:
-        "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",
+        "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",
     },
   })
 )
@@ -97,7 +97,7 @@ exports.postSignup = (req, res, next) => {
           return transporter
             .sendMail({
               to: email,
-              from: "mokhtarmajdi08@gmail.com",
+              from: "majdi.mokhtar@gmail.com",
               subject: "Signup Succeeded",
               html: "<h1>You signed up!</h1>",
             })
@@ -146,10 +146,10 @@ exports.postReset = (req, res, next) => {
         user.save()
       })
       .then((result) => {
-        res.redirect("/")
+        res.redirect(`http://localhost:3000/reset/${token}`)
         transporter.sendMail({
           to: req.body.email,
-          from: "mokhtarmajdi08@gmail.com",
+          from: "majdi.mokhtar@gmail.com",
           subject: "Password Reset",
           html: `
           <p>Requested password reset</p>
@@ -159,4 +159,52 @@ exports.postReset = (req, res, next) => {
       })
       .catch((err) => console.log(err))
   })
+}
+
+exports.getNewPassword = (req, res, next) => {
+  const token = req.params.token
+  User.findOne({ resetToken: token, resetTokenExperition: { $gt: Date.now() } })
+    .then((user) => {
+      let message = req.flash("error")
+      if (message.length > 0) {
+        message = message[0]
+      } else {
+        message = null
+      }
+      res.render("auth/new-password", {
+        path: "/new-password",
+        pageTitle: "New Password",
+        errorMessage: message,
+        userId: user._id.toString(),
+        passwordToken: token,
+      })
+    })
+    .catch((err) => console.log(err))
+}
+
+exports.postNewPassword = (req, res, next) => {
+  const newPassword = req.body.password
+  const userId = req.body.userId
+  const passwordToken = req.body.passwordToken
+  let resetUser
+
+  User.findOne({
+    resetToken: passwordToken,
+    resetTokenExperition: { $gt: Date.now() },
+    _id: userId,
+  })
+    .then((user) => {
+      resetUser = user
+      return bcrypt.hash(newPassword, 12)
+    })
+    .then((hashedPassword) => {
+      resetUser.password = hashedPassword
+      resetUser.resetToken = undefined
+      resetUser.resetTokenExperition = undefined
+      return resetUser.save()
+    })
+    .then((result) => {
+      res.redirect("/login")
+    })
+    .catch((err) => console.log(err))
 }
