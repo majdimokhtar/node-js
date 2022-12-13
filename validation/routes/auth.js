@@ -10,37 +10,56 @@ router.get("/login", authController.getLogin)
 
 router.get("/signup", authController.getSignup)
 
-router.post("/login", authController.postLogin)
+router.post(
+  "/login",
+  [
+    body("email")
+      .isEmail()
+      .withMessage("Please enter a valid email address.")
+      .normalizeEmail(),
+    body("password", "Password has to be valid.")
+      .isLength({ min: 5 })
+      .isAlphanumeric()
+      .trim(),
+  ],
+  authController.postLogin
+)
 
 router.post(
   "/signup",
   [
     check("email")
       .isEmail()
-      .withMessage("Please enter a valid email")
+      .withMessage("Please enter a valid email.")
       .custom((value, { req }) => {
-        // if (value === "test@test.com") {
-        //   throw new Error("This email is forbidden")
+        // if (value === 'test@test.com') {
+        //   throw new Error('This email address if forbidden.');
         // }
-        // return true
+        // return true;
         return User.findOne({ email: value }).then((userDoc) => {
           if (userDoc) {
-            return Promise.reject("Email already exists")
+            return Promise.reject(
+              "E-Mail exists already, please pick a different one."
+            )
           }
         })
-      }),
+      })
+      .normalizeEmail(),
     body(
       "password",
-      "Please enter a password with number and text and at least 5 characters"
+      "Please enter a password with only numbers and text and at least 5 characters."
     )
       .isLength({ min: 5 })
-      .isAlphanumeric(),
-    body("confirmPassword").custom((value, { req }) => {
-      if (value !== req.body.password) {
-        throw new Error("Password have to match")
-      }
-      return true
-    }),
+      .isAlphanumeric()
+      .trim(),
+    body("confirmPassword")
+      .trim()
+      .custom((value, { req }) => {
+        if (value !== req.body.password) {
+          throw new Error("Passwords have to match!")
+        }
+        return true
+      }),
   ],
   authController.postSignup
 )
