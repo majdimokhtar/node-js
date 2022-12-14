@@ -1,4 +1,5 @@
 const path = require("path")
+const multer = require("multer")
 
 const express = require("express")
 require("dotenv").config()
@@ -21,6 +22,27 @@ const store = new MongoDBStore({
 })
 const csrfProtection = csrf({})
 
+const fileStorage = multer.diskStorage({
+  destination: (req, file, cb) => {
+    cb(null, "images")
+  },
+  filename: (req, file, cb) => {
+    cb(null, new Date().toISOString() + "_" + file.originalname)
+  },
+})
+
+const fileFilter = (req, file, cb) => {
+  if (
+    file.mimetype === "image/png" ||
+    file.mimetype === "image/jpeg" ||
+    file.mimetype === "image/jpg"
+  ) {
+    cb(null, true)
+  } else {
+    cb(null, false)
+  }
+}
+
 app.set("view engine", "ejs")
 app.set("views", "views")
 
@@ -29,6 +51,7 @@ const shopRoutes = require("./routes/shop")
 const authRoutes = require("./routes/auth")
 
 app.use(bodyParser.urlencoded({ extended: false }))
+app.use(multer({ storage: fileStorage, fileFilter :fileFilter }).single("image"))
 app.use(express.static(path.join(__dirname, "public")))
 app.use(
   session({
