@@ -20,14 +20,14 @@ const store = new MongoDBStore({
   uri: MONGODB_URI,
   collection: "sessions",
 })
-const csrfProtection = csrf({})
+const csrfProtection = csrf()
 
 const fileStorage = multer.diskStorage({
   destination: (req, file, cb) => {
     cb(null, "images")
   },
   filename: (req, file, cb) => {
-    cb(null, new Date().toISOString() + "_" + file.originalname)
+    cb(null, new Date().toISOString() + "-" + file.originalname)
   },
 })
 
@@ -51,7 +51,9 @@ const shopRoutes = require("./routes/shop")
 const authRoutes = require("./routes/auth")
 
 app.use(bodyParser.urlencoded({ extended: false }))
-app.use(multer({ storage: fileStorage, fileFilter :fileFilter }).single("image"))
+app.use(
+  multer({ storage: fileStorage, fileFilter: fileFilter }).single("image")
+)
 app.use(express.static(path.join(__dirname, "public")))
 app.use(
   session({
@@ -99,6 +101,7 @@ app.use((error, req, res, next) => {
   res.status(500).render("500", {
     pageTitle: "Error!",
     path: "/500",
+    isAuthenticated: req.session.isLoggedIn,
   })
 })
 

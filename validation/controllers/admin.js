@@ -2,9 +2,6 @@ const Product = require("../models/product")
 const { validationResult } = require("express-validator/check")
 
 exports.getAddProduct = (req, res, next) => {
-  if (!req.session.isLoggedIn) {
-    return res.redirect("/login")
-  }
   res.render("admin/edit-product", {
     pageTitle: "Add Product",
     path: "/admin/add-product",
@@ -17,9 +14,24 @@ exports.getAddProduct = (req, res, next) => {
 
 exports.postAddProduct = (req, res, next) => {
   const title = req.body.title
-  const imageUrl = req.file
+  const image = req.file
   const price = req.body.price
   const description = req.body.description
+  if(!image){
+    return res.status(422).render("admin/edit-product", {
+      pageTitle: "Add Product",
+      path: "/admin/add-product",
+      editing: false,
+      hasError: true,
+      product: {
+        title: title,
+        price: price,
+        description: description,
+      },
+      errorMessage: "attached file is not an image",
+      validationErrors: []
+    })
+  }
   const errors = validationResult(req)
   if (!errors.isEmpty()) {
     return res.status(422).render("admin/edit-product", {
@@ -29,7 +41,6 @@ exports.postAddProduct = (req, res, next) => {
       hasError: true,
       product: {
         title: title,
-        imageUrl: imageUrl,
         price: price,
         description: description,
       },
@@ -37,6 +48,8 @@ exports.postAddProduct = (req, res, next) => {
       validationErrors: errors.array(),
     })
   }
+  const imageUrl = image.path
+
   const product = new Product({
     title: title,
     price: price,
