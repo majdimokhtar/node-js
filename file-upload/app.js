@@ -1,5 +1,7 @@
 const path = require("path")
 
+
+require('dotenv').config()
 const express = require("express")
 const bodyParser = require("body-parser")
 const mongoose = require("mongoose")
@@ -26,7 +28,7 @@ const fileStorage = multer.diskStorage({
     cb(null, "images")
   },
   filename: (req, file, cb) => {
-    cb(null, new Date().toISOString() + "-" + file.originalname)
+    cb(null, new Date().toISOString().replace(/:/g, '-') + "-" + file.originalname)
   },
 })
 
@@ -54,6 +56,7 @@ app.use(
   multer({ storage: fileStorage, fileFilter: fileFilter }).single("image")
 )
 app.use(express.static(path.join(__dirname, "public")))
+app.use("/images",express.static(path.join(__dirname, "images")))
 app.use(
   session({
     secret: "my secret",
