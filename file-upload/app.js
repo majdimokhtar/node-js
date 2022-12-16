@@ -1,7 +1,6 @@
 const path = require("path")
+require("dotenv").config()
 
-
-require('dotenv').config()
 const express = require("express")
 const bodyParser = require("body-parser")
 const mongoose = require("mongoose")
@@ -28,7 +27,10 @@ const fileStorage = multer.diskStorage({
     cb(null, "images")
   },
   filename: (req, file, cb) => {
-    cb(null, new Date().toISOString().replace(/:/g, '-') + "-" + file.originalname)
+    cb(
+      null,
+      new Date().toISOString().replace(/:/g, "-") + "-" + file.originalname
+    )
   },
 })
 
@@ -56,7 +58,7 @@ app.use(
   multer({ storage: fileStorage, fileFilter: fileFilter }).single("image")
 )
 app.use(express.static(path.join(__dirname, "public")))
-app.use("/images",express.static(path.join(__dirname, "images")))
+app.use("/images", express.static(path.join(__dirname, "images")))
 app.use(
   session({
     secret: "my secret",
@@ -75,6 +77,7 @@ app.use((req, res, next) => {
 })
 
 app.use((req, res, next) => {
+  // throw new Error('Sync Dummy');
   if (!req.session.user) {
     return next()
   }
@@ -90,7 +93,6 @@ app.use((req, res, next) => {
       next(new Error(err))
     })
 })
-
 
 app.use("/admin", adminRoutes)
 app.use(shopRoutes)
@@ -110,6 +112,14 @@ app.use((error, req, res, next) => {
   })
 })
 
+// mongoose
+//   .connect(MONGODB_URI)
+//   .then(result => {
+//     app.listen(3000);
+//   })
+//   .catch(err => {
+//     console.log(err);
+//   });
 mongoose
   .connect(MONGODB_URI)
   .then((result) => {
