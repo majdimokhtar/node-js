@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css?family=Open+Sans:400,700');
+@import url("https://fonts.googleapis.com/css?family=Open+Sans:400,700");
 
 * {
   box-sizing: border-box;
@@ -7,7 +7,7 @@
 body {
   padding: 0;
   margin: 0;
-  font-family: 'Open Sans', sans-serif;
+  font-family: "Open Sans", sans-serif;
 }
 
 main {
@@ -263,4 +263,21 @@ form {
   .user-message {
     width: 30rem;
   }
+}
+
+.pagination {
+  text-align: center;
+}
+.pagination a {
+  text-decoration: none;
+  color: #00695c;
+  border: 1px #00695c solid;
+  margin: 0 1rem;
+  padding: 0.5rem;
+}
+
+.pagination a:hover,
+.pagination a:active {
+  background-color: #00695c;
+  color: white;
 }
