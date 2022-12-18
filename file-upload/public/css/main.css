@@ -277,7 +277,8 @@ form {
 }
 
 .pagination a:hover,
-.pagination a:active {
+.pagination a:active,
+.pagination a.active {
   background-color: #00695c;
   color: white;
 }

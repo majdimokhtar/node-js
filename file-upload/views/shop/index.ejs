@@ -29,10 +29,13 @@
       </article>
       <% } %>
     </div>
-    <div class="pagination">
-    <a href="/?page=1">1</a>
-    <a href="/?page=2">2</a>
-    </div>
+    <%- include('../includes/pagination.ejs', {currentPage: currentPage ,
+      prevPage:prevPage,
+      hasPrev:hasPrev,
+      prevPage:prevPage,
+      hasNext:hasNext,
+      nextPage:nextPage,
+      lastPage:lastPage}) %>
     <% } else { %>
     <h1>No Products Found!</h1>
     <% } %>
